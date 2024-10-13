@@ -1,11 +1,10 @@
-//usr/bin/go run $0 $@ ; exit
-
 package main
 
 import (
+	"exp/util"
 	"fmt"
 )
 
 func main() {
-	fmt.Println("testing")
+	fmt.Println(util.Random())
 }
