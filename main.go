@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	cmd := exec.Command("ping", "-c", "5", "8.8.8.8")
+	cmd := exec.Command("./test.sh")
 
 	stdout, _ := cmd.StdoutPipe()
 	cmd.Start()
