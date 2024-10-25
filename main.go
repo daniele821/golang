@@ -1,22 +1,14 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
+	"os"
 	"os/exec"
 )
 
 func main() {
-	cmd := exec.Command("./test.sh")
-
-	stdout, _ := cmd.StdoutPipe()
-	cmd.Start()
-
-	scanner := bufio.NewScanner(stdout)
-	scanner.Split(bufio.ScanLines)
-	for scanner.Scan() {
-		m := scanner.Text()
-		fmt.Println(m)
-	}
-	cmd.Wait()
+	cmd := exec.Command("sh", "./test.sh")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+	cmd.Run()
 }
