@@ -1,15 +1,24 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"slices"
+	"io/fs"
+	"path/filepath"
 )
 
-func main() {
-	test(1, 2)
+func visit(path string, di fs.DirEntry, err error) error {
+	if err != nil {
+		fmt.Println(err)
+		panic("FUUUUUCK")
+	}
+	fmt.Println(path, " | ", di, " | ", err)
+	return nil
 }
 
-func test(a ...int) {
-	fmt.Println(slices.Contains(a, 1))
-	fmt.Printf("%T", a)
+func main() {
+	flag.Parse()
+	root := flag.Arg(0)
+	err := filepath.WalkDir(root, visit)
+	fmt.Printf("filepath.WalkDir() returned %v\n", err)
 }
