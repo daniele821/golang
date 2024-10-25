@@ -1,14 +1,15 @@
 package main
 
 import (
-	"os"
-	"os/exec"
+	"fmt"
+	"slices"
 )
 
 func main() {
-	cmd := exec.Command("sh", "./test.sh")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-	cmd.Run()
+	test(1, 2)
+}
+
+func test(a ...int) {
+	fmt.Println(slices.Contains(a, 1))
+	fmt.Printf("%T", a)
 }
