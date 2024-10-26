@@ -55,7 +55,7 @@ func readersEqual(file1, file2 string) bool {
 }
 
 func FileCmp(file1, file2 string) bool {
-	const chunkSize int = 4096
+	const chunkSize int = 64000
 
 	// shortcuts: check file metadata
 	stat1, err := os.Stat(file1)
@@ -122,10 +122,18 @@ func FileCmp(file1, file2 string) bool {
 }
 
 func main() {
-	a := []string{"/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Light.ttf"}
-	b := []string{"/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf"}
+	a := []string{
+		"/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Light.ttf",
+		"/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf",
+		"/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf",
+	}
+	b := []string{
+		"/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf",
+		"/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf",
+		"/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf",
+	}
 
-	for i := range 1 {
+	for i, _ := range a {
 		start := time.Now()
 		fmt.Print(readersEqual(a[i], b[i]))
 		fmt.Println(time.Since(start))
