@@ -9,9 +9,8 @@ import (
 	"time"
 )
 
-const chunkSize = 64000
-
 func readersEqual(file1, file2 string) bool {
+	const chunkSize = 64000
 	r, _ := os.Open(file1)
 	t, _ := os.Open(file2)
 	rBuf := make([]byte, chunkSize)
