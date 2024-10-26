@@ -54,10 +54,81 @@ func readersEqual(file1, file2 string) bool {
 	}
 }
 
+func FileCmp(file1, file2 string) bool {
+	const chunkSize int = 4096
+
+	// shortcuts: check file metadata
+	stat1, err := os.Stat(file1)
+	if err != nil {
+		return false
+	}
+
+	stat2, err := os.Stat(file2)
+	if err != nil {
+		return false
+	}
+
+	// are inputs are literally the same file?
+	if os.SameFile(stat1, stat2) {
+		return true
+	}
+
+	// do inputs at least have the same size?
+	if stat1.Size() != stat2.Size() {
+		return false
+	}
+
+	// long way: compare contents
+	f1, err := os.Open(file1)
+	if err != nil {
+		return false
+	}
+	defer f1.Close()
+
+	f2, err := os.Open(file2)
+	if err != nil {
+		return false
+	}
+	defer f2.Close()
+
+	b1 := make([]byte, chunkSize)
+	b2 := make([]byte, chunkSize)
+	for {
+		n1, err1 := io.ReadFull(f1, b1)
+		n2, err2 := io.ReadFull(f2, b2)
+
+		// https://pkg.go.dev/io#Reader
+		// > Callers should always process the n > 0 bytes returned
+		// > before considering the error err. Doing so correctly
+		// > handles I/O errors that happen after reading some bytes
+		// > and also both of the allowed EOF behaviors.
+
+		if !bytes.Equal(b1[:n1], b2[:n2]) {
+			return false
+		}
+
+		if (err1 == io.EOF && err2 == io.EOF) || (err1 == io.ErrUnexpectedEOF && err2 == io.ErrUnexpectedEOF) {
+			return true
+		}
+
+		// some other error, like a dropped network connection or a bad transfer
+		if err1 != nil {
+			return false
+		}
+		if err2 != nil {
+			return false
+		}
+	}
+}
+
 func main() {
+	a := "/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Light.ttf"
+	b := "/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf"
 	start := time.Now()
-	a := "/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf"
-	b := "/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf"
-	readersEqual(a, b)
+	fmt.Print(readersEqual(a, b))
+	fmt.Println(time.Since(start))
+
+	start = time.Now()
+	fmt.Print(FileCmp(a, b))
 	fmt.Println(time.Since(start))
 }
