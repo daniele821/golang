@@ -19,7 +19,7 @@ func filesDifferNoChecks(file1, file2 string) bool {
 	for {
 		readFromR, errR := r.Read(rBuf)
 		if errR != nil && !errors.Is(errR, io.EOF) {
-			return false
+			return true
 		}
 
 		readFromT := 0
@@ -28,27 +28,27 @@ func filesDifferNoChecks(file1, file2 string) bool {
 		if readFromR == 0 && errors.Is(errR, io.EOF) {
 			readFromT, errT := t.Read(tBuf[:1])
 			if readFromT == 0 && errors.Is(errT, io.EOF) {
-				return true
-			} else {
 				return false
+			} else {
+				return true
 			}
 		}
 
 		for readFromR > readFromT {
 			nextReadFromT, errT := t.Read(tCmpBuf[readFromT:])
 			if errT != nil && !errors.Is(errT, io.EOF) {
-				return false
+				return true
 			}
 			prevReadFromT := readFromT
 			readFromT = prevReadFromT + nextReadFromT
 			if !bytes.Equal(rBuf[prevReadFromT:readFromT], tCmpBuf[prevReadFromT:readFromT]) {
-				return false
-			}
-			if errors.Is(errR, io.EOF) && errors.Is(errT, io.EOF) {
 				return true
 			}
-			if errors.Is(errR, io.EOF) || errors.Is(errT, io.EOF) {
+			if errors.Is(errR, io.EOF) && errors.Is(errT, io.EOF) {
 				return false
+			}
+			if errors.Is(errR, io.EOF) || errors.Is(errT, io.EOF) {
+				return true
 			}
 		}
 	}
@@ -60,34 +60,34 @@ func filesDiffer(file1, file2 string) bool {
 	// shortcuts: check file metadata
 	stat1, err := os.Stat(file1)
 	if err != nil {
-		return false
+		return true
 	}
 
 	stat2, err := os.Stat(file2)
 	if err != nil {
-		return false
+		return true
 	}
 
 	// are inputs are literally the same file?
 	if os.SameFile(stat1, stat2) {
-		return true
+		return false
 	}
 
 	// do inputs at least have the same size?
 	if stat1.Size() != stat2.Size() {
-		return false
+		return true
 	}
 
 	// long way: compare contents
 	f1, err := os.Open(file1)
 	if err != nil {
-		return false
+		return true
 	}
 	defer f1.Close()
 
 	f2, err := os.Open(file2)
 	if err != nil {
-		return false
+		return true
 	}
 	defer f2.Close()
 
@@ -104,19 +104,19 @@ func filesDiffer(file1, file2 string) bool {
 		// > and also both of the allowed EOF behaviors.
 
 		if !bytes.Equal(b1[:n1], b2[:n2]) {
-			return false
+			return true
 		}
 
 		if (err1 == io.EOF && err2 == io.EOF) || (err1 == io.ErrUnexpectedEOF && err2 == io.ErrUnexpectedEOF) {
-			return true
+			return false
 		}
 
 		// some other error, like a dropped network connection or a bad transfer
 		if err1 != nil {
-			return false
+			return true
 		}
 		if err2 != nil {
-			return false
+			return true
 		}
 	}
 }
