@@ -122,13 +122,16 @@ func FileCmp(file1, file2 string) bool {
 }
 
 func main() {
-	a := "/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Light.ttf"
-	b := "/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf"
-	start := time.Now()
-	fmt.Print(readersEqual(a, b))
-	fmt.Println(time.Since(start))
+	a := []string{"/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Light.ttf"}
+	b := []string{"/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf"}
 
-	start = time.Now()
-	fmt.Print(FileCmp(a, b))
-	fmt.Println(time.Since(start))
+	for i := range 1 {
+		start := time.Now()
+		fmt.Print(readersEqual(a[i], b[i]))
+		fmt.Println(time.Since(start))
+
+		start = time.Now()
+		fmt.Print(FileCmp(a[i], b[i]))
+		fmt.Println(time.Since(start))
+	}
 }
