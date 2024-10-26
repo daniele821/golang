@@ -59,6 +59,6 @@ func main() {
 	start := time.Now()
 	a := "/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf"
 	b := "/home/daniele/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf"
-	fmt.Println(readersEqual(a, b))
+	readersEqual(a, b)
 	fmt.Println(time.Since(start))
 }
