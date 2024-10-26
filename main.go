@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func readersEqual(file1, file2 string) bool {
+func filesDifferNoChecks(file1, file2 string) bool {
 	const chunkSize = 64000
 	r, _ := os.Open(file1)
 	t, _ := os.Open(file2)
@@ -54,7 +54,7 @@ func readersEqual(file1, file2 string) bool {
 	}
 }
 
-func FileCmp(file1, file2 string) bool {
+func filesDiffer(file1, file2 string) bool {
 	const chunkSize int = 64000
 
 	// shortcuts: check file metadata
@@ -133,13 +133,13 @@ func main() {
 		"/personal/repos/daniele821/dotfiles/backup/.local/share/fonts/FiraCode/FiraCodeNerdFont-Bold.ttf",
 	}
 
-	for i, _ := range a {
+	for i := range a {
 		start := time.Now()
-		fmt.Print(readersEqual(a[i], b[i]))
+		fmt.Print(filesDifferNoChecks(a[i], b[i]))
 		fmt.Println(time.Since(start))
 
 		start = time.Now()
-		fmt.Print(FileCmp(a[i], b[i]))
+		fmt.Print(filesDiffer(a[i], b[i]))
 		fmt.Println(time.Since(start))
 	}
 }
