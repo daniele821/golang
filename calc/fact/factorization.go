@@ -48,11 +48,11 @@ func Factorize(num int) PrimeFactors {
 func (p PrimeFactors) String() string {
 	builder := []string{}
 	keys := []int{}
-	for key, _ := range p {
+	for key := range p {
 		keys = append(keys, key)
 	}
 	slices.Sort(keys)
-	for key := range keys {
+	for _, key := range keys {
 		val := p[key]
 		if val == 1 {
 			builder = append(builder, fmt.Sprintf("%d", key))
