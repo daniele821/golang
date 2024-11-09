@@ -2,6 +2,7 @@ package fact
 
 import (
 	"fmt"
+	"math"
 	"math/bits"
 	"strings"
 )
@@ -26,12 +27,17 @@ func Factorize(num int) PrimeFactors {
 	// if divisor isn't prime, its prime factors
 	// are smaller and already included
 	divisor := 3
+	lastDiv := math.Sqrt(float64(num))
 	for num > 1 {
 		if num%divisor == 0 {
 			factors[divisor] += 1
 			num /= divisor
 		} else {
 			divisor += 2
+			if divisor > int(lastDiv) {
+				factors[num] = 1
+				break
+			}
 		}
 	}
 
