@@ -1,4 +1,4 @@
-package fact
+package calc
 
 import (
 	"fmt"
