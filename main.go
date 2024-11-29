@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"os/exec"
 )
 
 func main() {
-	i, err := os.ReadFile("/home/daniele/test")
-	fmt.Println(err)
-	fmt.Println((string(i)))
+	remote, err := exec.Command("git", "-C", "/personal/repos/daniele821/golang/", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}").Output()
+	fmt.Println(string(remote), err)
+	// git rev-parse --abbrev-ref --symbolic-full-name @{u}
 }
