@@ -31,8 +31,10 @@ func main() {
 	}
 	res := 0
 
-	fmt.Println(arr1)
-	fmt.Println(arr2)
+	for _, val1 := range arr1 {
+		val2 := arr2[val1]
+		res += val1 * val2
+	}
 
 	fmt.Println(res)
 }
