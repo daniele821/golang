@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -32,7 +33,7 @@ func isValid(vals []int) bool {
 }
 
 func main() {
-	file_byte, _ := os.ReadFile("input.txt")
+	file_byte, _ := os.ReadFile("input2.txt")
 	file := string(file_byte)
 	count := 0
 	for _, line := range strings.Split(file, "\n") {
@@ -46,13 +47,16 @@ func main() {
 			value, _ := strconv.Atoi(elem)
 			vals = append(vals, value)
 		}
-		for index := range len(vals) {
-			lhs := vals[:index]
-			rhs := vals[index+1:]
-			fmt.Println(lhs, rhs)
-			if isValid(vals) {
-				count += 1
-				break
+		if isValid(vals) {
+			fmt.Println(vals)
+			count += 1
+		} else {
+			for index := range len(vals) {
+				if isValid(slices.Concat(vals[:index], vals[index+1:])) {
+					fmt.Println(slices.Concat(vals[:index], vals[index+1:]))
+					count += 1
+					break
+				}
 			}
 		}
 	}
