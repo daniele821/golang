@@ -7,10 +7,10 @@ import (
 	"strings"
 )
 
-func isValid(vals []int) int {
+func isValid(vals []int) bool {
 	length := len(vals)
 	if length <= 1 {
-		return 1
+		return true
 	}
 	direction := vals[1] - vals[0]
 	decreasing := false
@@ -25,10 +25,10 @@ func isValid(vals []int) int {
 			dir *= -1
 		}
 		if dir < 1 || dir > 3 {
-			return 0
+			return false
 		}
 	}
-	return 1
+	return true
 }
 
 func main() {
@@ -46,7 +46,15 @@ func main() {
 			value, _ := strconv.Atoi(elem)
 			vals = append(vals, value)
 		}
-		count += isValid(vals)
+		for index := range len(vals) {
+			lhs := vals[:index]
+			rhs := vals[index+1:]
+			fmt.Println(lhs, rhs)
+			if isValid(vals) {
+				count += 1
+				break
+			}
+		}
 	}
 
 	fmt.Println(count)
