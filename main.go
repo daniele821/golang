@@ -7,34 +7,47 @@ import (
 	"strings"
 )
 
+func isValid(vals []int) int {
+	length := len(vals)
+	if length <= 1 {
+		return 1
+	}
+	direction := vals[1] - vals[0]
+	decreasing := false
+	if direction < 0 {
+		decreasing = true
+	}
+	for index := range length - 1 {
+		prev := vals[index]
+		next := vals[index+1]
+		dir := next - prev
+		if decreasing {
+			dir *= -1
+		}
+		if dir < 1 || dir > 3 {
+			return 0
+		}
+	}
+	return 1
+}
+
 func main() {
 	file_byte, _ := os.ReadFile("input.txt")
 	file := string(file_byte)
-	arr1 := []int{}
-	arr2 := map[int]int{}
+	count := 0
 	for _, line := range strings.Split(file, "\n") {
 		line := strings.TrimSpace(line)
-		if line != "" {
-			splitted := strings.Fields(line)
-			if len(splitted) != 2 {
-				panic("wrong amount of elems: ")
-			}
-			tmp1, _ := strconv.Atoi(splitted[0])
-			arr1 = append(arr1, tmp1)
-			tmp2, _ := strconv.Atoi(splitted[1])
-			if val, ok := arr2[tmp2]; ok {
-				arr2[tmp2] = val + 1
-			} else {
-				arr2[tmp2] = 1
-			}
+		if line == "" {
+			continue
 		}
+		splitted := strings.Fields(line)
+		vals := []int{}
+		for _, elem := range splitted {
+			value, _ := strconv.Atoi(elem)
+			vals = append(vals, value)
+		}
+		count += isValid(vals)
 	}
-	res := 0
 
-	for _, val1 := range arr1 {
-		val2 := arr2[val1]
-		res += val1 * val2
-	}
-
-	fmt.Println(res)
+	fmt.Println(count)
 }
