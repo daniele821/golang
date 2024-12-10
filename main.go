@@ -1,65 +1,27 @@
 package main
 
-import (
-	"fmt"
-	"os"
-	"slices"
-	"strconv"
-	"strings"
-)
+import "fmt"
 
-func isValid(vals []int) bool {
-	length := len(vals)
-	if length <= 1 {
-		return true
-	}
-	direction := vals[1] - vals[0]
-	decreasing := false
-	if direction < 0 {
-		decreasing = true
-	}
-	for index := range length - 1 {
-		prev := vals[index]
-		next := vals[index+1]
-		dir := next - prev
-		if decreasing {
-			dir *= -1
+func print(box [3][3]int) {
+	for _, line := range box {
+		for _, cell := range line {
+			fmt.Print(cell, " ")
 		}
-		if dir < 1 || dir > 3 {
-			return false
+		fmt.Println()
+	}
+}
+
+func oneline(box [3][3]int) [9]int {
+	boxLine := [9]int{}
+	for a, line := range box {
+		for b, cell := range line {
+			boxLine[a*3+b] = cell
 		}
 	}
-	return true
+	return boxLine
 }
 
 func main() {
-	file_byte, _ := os.ReadFile("input2.txt")
-	file := string(file_byte)
-	count := 0
-	for _, line := range strings.Split(file, "\n") {
-		line := strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-		splitted := strings.Fields(line)
-		vals := []int{}
-		for _, elem := range splitted {
-			value, _ := strconv.Atoi(elem)
-			vals = append(vals, value)
-		}
-		if isValid(vals) {
-			fmt.Println(vals)
-			count += 1
-		} else {
-			for index := range len(vals) {
-				if isValid(slices.Concat(vals[:index], vals[index+1:])) {
-					fmt.Println(slices.Concat(vals[:index], vals[index+1:]))
-					count += 1
-					break
-				}
-			}
-		}
-	}
-
-	fmt.Println(count)
+	box := [3][3]int{}
+	print(box)
 }
