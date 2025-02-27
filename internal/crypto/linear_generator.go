@@ -5,17 +5,17 @@ import (
 	"slices"
 )
 
-func linGen(x0, a, b, m int) int {
+func LinGen(x0, a, b, m int) int {
 	return (x0*a + b) % m
 }
 
-func findPeriod(x0, a, b, m int) []int {
+func FindPeriod(x0, a, b, m int) []int {
 	period := []int{}
 
 	index := 0
 
 	for {
-		x1 := linGen(x0, a, b, m)
+		x1 := LinGen(x0, a, b, m)
 		if slices.Contains(period, x1) {
 			return period
 		}
