@@ -17,10 +17,12 @@ func FindPeriod(x0, a, b, m int) []int {
 	for {
 		x1 := LinGen(x0, a, b, m)
 		if slices.Contains(period, x1) {
+			fmt.Println(x1)
 			return period
 		}
 		period = append(period, x1)
 		fmt.Printf("%d -> %d\n", index, x1)
 		index += 1
+		x0 = x1
 	}
 }
